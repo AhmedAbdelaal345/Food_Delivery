@@ -12,11 +12,11 @@ class Cart extends StatefulWidget {
 }
 
 class _CartState extends State<Cart> {
-  // Remove @override from here - it doesn't belong above variables
+  
   int classicBurgerCount = 0;
   int chickenBurgerCount = 0;
 
-  // Prices for each item
+  
   double classicBurgerPrice = 12.99;
   double chickenBurgerPrice = 14.99;
 
@@ -31,7 +31,7 @@ class _CartState extends State<Cart> {
 
   double get total => subtotal + deliveryFee + taxes;
 
-  @override // This is the correct place for @override
+  @override 
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
