@@ -2,6 +2,10 @@ import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_not
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:task/core/constants.dart';
+import 'package:task/core/widgets/product_list_widget.dart';
+import 'package:task/models/food_item_model.dart';
+// Import your ProductListWidget
+// import 'package:task/widgets/product_list_widget.dart'; // Add this import
 
 class HomePage extends StatefulWidget {
   HomePage({super.key, this.controller});
@@ -9,44 +13,53 @@ class HomePage extends StatefulWidget {
   NotchBottomBarController? controller;
   @override
   State<HomePage> createState() => _HomePageState();
+  static const String homeId = "Home";
 }
 
 class _HomePageState extends State<HomePage> {
   bool isList = true;
   List<bool> isheart = [false, false, false];
+  bool isAddedToCart = false;
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> list = [
-      _listTile(
-        text: "Burger Combo",
-        subtext: "Delicious Burger with Fries",
+    List<FoodItemModel> list = [
+      FoodItemModel(
         image: Constants.image4,
+        title: "Burger Combo",
+        subtitle: "Delicious Burger with Fries",
+        isAddToCart: isAddedToCart,
+        price: 12.25,
+        
       ),
-      _listTile(
-        text: "Pizaa",
-        subtext: "Freshly backed Pizaa",
+      FoodItemModel(
+        title: "Pizaa",
+        subtitle: "Freshly backed Pizaa",
         image: Constants.image7,
+        isAddToCart: isAddedToCart,
+        price: 25.00,
       ),
-      _listTile(
-        text: "Chicken wings",
-        subtext: "Spicy Chicken Wings",
+      FoodItemModel(
+        title: "Chicken wings",
+        subtitle: "Spicy Chicken Wings",
         image: Constants.image6,
+        isAddToCart: isAddedToCart,
+        price: 17.55,
       ),
     ];
+
     List<Widget> grid = [
       _gridTile(
         text: "Burger Combo",
         subtext: "Delicious Burger with Fries",
         image: Constants.image4,
         price: "12.25",
-        icon:
-            !isheart[0]
-                ? Icon(Icons.favorite_border_outlined, color: Colors.white)
-                : Icon(Icons.favorite, color: Colors.red),
+        icon: !isheart[0]
+            ? Icon(Icons.favorite_border_outlined, color: Colors.white)
+            : Icon(Icons.favorite, color: Colors.red),
         ontap: () {
           setState(() {
-            isheart[0] = true;
+            isheart[0] = !isheart[0];
           });
         },
       ),
@@ -55,13 +68,12 @@ class _HomePageState extends State<HomePage> {
         subtext: "Freshly backed Pizaa",
         image: Constants.image7,
         price: "15.27",
-        icon:
-            !isheart[1]
-                ? Icon(Icons.favorite_border_outlined, color: Colors.white)
-                : Icon(Icons.favorite, color: Colors.red),
+        icon: !isheart[1]
+            ? Icon(Icons.favorite_border_outlined, color: Colors.white)
+            : Icon(Icons.favorite, color: Colors.red),
         ontap: () {
           setState(() {
-            isheart[1] = true;
+            isheart[1] = !isheart[1];
           });
         },
       ),
@@ -70,123 +82,97 @@ class _HomePageState extends State<HomePage> {
         subtext: "Spicy chicken Wings",
         image: Constants.image6,
         price: "10.85",
-        icon:
-            !isheart[2]
-                ? Icon(Icons.favorite_border_outlined, color: Colors.white)
-                : Icon(Icons.favorite, color: Colors.red),
+        icon: !isheart[2]
+            ? Icon(Icons.favorite_border_outlined, color: Colors.white)
+            : Icon(Icons.favorite, color: Colors.red),
         ontap: () {
           setState(() {
-            isheart[2] = true;
+            isheart[2] = !isheart[2];
           });
         },
       ),
     ];
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Food Delivery",
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w500,
-            fontSize: 20,
-          ),
-        ),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.shopping_cart_outlined),
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextField(
-              cursorHeight: 18,
-              cursorColor: Colors.red.shade200,
-              decoration: InputDecoration(
-                contentPadding: EdgeInsetsDirectional.symmetric(vertical: 5),
-                filled: true,
-                fillColor: Color(0xffF3E7E7),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  borderSide: BorderSide(
-                    strokeAlign: 0,
-                    color: Colors.red.shade50,
-                  ),
-                ),
 
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  borderSide: BorderSide(
-                    strokeAlign: 0,
-                    color: Colors.red.shade50,
-                  ),
+    return Padding(
+      padding: EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextField(
+            cursorHeight: 18,
+            cursorColor: Colors.red.shade200,
+            decoration: InputDecoration(
+              contentPadding: EdgeInsetsDirectional.symmetric(vertical: 5),
+              filled: true,
+              fillColor: Color(0xffF3E7E7),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20),
+                borderSide: BorderSide(
+                  strokeAlign: 0,
+                  color: Colors.red.shade50,
                 ),
-                prefixIcon: Icon(Icons.search, color: Color(0xff8A7174)),
-                hintStyle: TextStyle(color: Color(0xff8A7174), fontSize: 14),
-                hintText: "Search for food",
               ),
-            ),
-            _carousalSlider(),
-            Text(
-              "Featured Items",
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w700,
-                fontSize: 20,
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20),
+                borderSide: BorderSide(
+                  strokeAlign: 0,
+                  color: Colors.red.shade50,
+                ),
               ),
+              prefixIcon: Icon(Icons.search, color: Color(0xff8A7174)),
+              hintStyle: TextStyle(color: Color(0xff8A7174), fontSize: 14),
+              hintText: "Search for food",
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-
-              children: [
-                Expanded(
-                  child: _button(
-                    "List View",
-                    null,
-                    Colors.black,
-                    null,
-                    null,
-                    () {
-                      setState(() {
-                        isList = true;
-                      });
-                    },
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: _button(
-                    "Grid View",
-                    0xffE72835,
-                    Colors.white,
-                    null,
-                    null,
-                    () {
-                      setState(() {
-                        isList = false;
-                      });
-                    },
-                  ),
-                ),
-              ],
+          ),
+          _carousalSlider(),
+          Text(
+            "Featured Items",
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.w700,
+              fontSize: 20,
             ),
-            SizedBox(height: 15),
-            isList
-                ? Flexible(
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: list.length,
-                    itemBuilder: (context, index) {
-                      return list[index];
-                    },
-                  ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Expanded(
+                child: _button(
+                  "List View",
+                  isList ? 0xffE72835 : null,
+                  isList ? Colors.white : Colors.black,
+                  null,
+                  null,
+                  () {
+                    setState(() {
+                      isList = true;
+                    });
+                  },
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: _button(
+                  "Grid View",
+                  !isList ? 0xffE72835 : null,
+                  !isList ? Colors.white : Colors.black,
+                  null,
+                  null,
+                  () {
+                    setState(() {
+                      isList = false;
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 15),
+          isList
+              ? Flexible(
+                  child: ProductListWidget(items: list), // Using separate widget
                 )
-                : Flexible(
+              : Flexible(
                   child: GridView.builder(
                     itemCount: grid.length,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -200,7 +186,47 @@ class _HomePageState extends State<HomePage> {
                     },
                   ),
                 ),
+        ],
+      ),
+    );
+  }
+
+  // Button widget for List/Grid toggle
+  Widget _button(
+    String text,
+    int? colorButton,
+    Color colorText,
+    FontWeight? fontWeight,
+    double? size,
+    VoidCallback ontap,
+  ) {
+    return GestureDetector(
+      onTap: ontap,
+      child: Container(
+        height: 40,
+        padding: EdgeInsets.symmetric(horizontal: 8),
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              spreadRadius: 0.2,
+              offset: Offset(2, 2),
+              color: Colors.grey.withOpacity(0.3),
+            ),
           ],
+          borderRadius: BorderRadius.circular(8),
+          color: Color(colorButton ?? 0xffF3E7E7),
+        ),
+        child: Center(
+          child: Text(
+            text,
+            style: TextStyle(
+              color: colorText,
+              fontWeight: fontWeight ?? FontWeight.w600,
+              fontSize: size ?? 14,
+            ),
+            textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
       ),
     );
@@ -267,113 +293,32 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _listTile({
-    required String text,
-    required String subtext,
-    required String image,
-  }) {
-    return ListTile(
-      leading: CircleAvatar(backgroundImage: AssetImage(image), radius: 25),
-      title: Text(
-        text,
-        style: TextStyle(
-          color: Colors.black,
-          fontWeight: FontWeight.w700,
-          fontSize: 18,
-        ),
-      ),
-      subtitle: Text(
-        subtext,
-        style: TextStyle(
-          color: Colors.grey,
-          fontWeight: FontWeight.w500,
-          fontSize: 12,
-        ),
-      ),
-      trailing: SizedBox(
-        width: 90,
-        child: _button(
-          "Add to cart",
-          0xffF6EAEA,
-          Colors.black,
-          FontWeight.w400,
-          14,
-          () {},
-        ),
-      ),
-    );
-  }
-
-  Widget _button(
-    String text,
-    int? colorButton,
-    Color colorText,
-    FontWeight? fontWight,
-    double? size,
-    VoidCallback ontap,
-  ) {
-    return GestureDetector(
-      onTap: ontap,
-      child: Container(
-        height: 30, // Increased height slightly for better appearance
-        padding: EdgeInsets.symmetric(horizontal: 8), // Add padding for text
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              spreadRadius: 0.2,
-              offset: Offset(2, 2),
-              color: Colors.white,
-            ),
-          ],
-          borderRadius: BorderRadius.circular(8),
-          color: Color(colorButton ?? 0xffF3E7E7),
-        ),
-        child: Center(
-          child: Text(
-            text,
-            style: TextStyle(
-              color: colorText,
-              fontWeight: fontWight ?? FontWeight.w600,
-              fontSize: size ?? 14,
-            ),
-            textAlign: TextAlign.center,
-            overflow: TextOverflow.ellipsis, // Handle text overflow
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _carousalSlider() {
     return CarouselSlider(
       options: CarouselOptions(height: 200.0),
-      items:
-          [
-            Constants.image2,
-            Constants.image3,
-            Constants.image4,
-
-            Constants.image5,
-          ].map((i) {
-            return Builder(
-              builder: (BuildContext context) {
-                return Container(
-                  width: MediaQuery.of(context).size.width,
-
-                  margin: EdgeInsets.symmetric(horizontal: 5.0, vertical: 8),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    image: DecorationImage(
-                      image: AssetImage(i),
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-
-                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                );
-              },
+      items: [
+        Constants.image2,
+        Constants.image3,
+        Constants.image4,
+        Constants.image5,
+      ].map((i) {
+        return Builder(
+          builder: (BuildContext context) {
+            return Container(
+              width: MediaQuery.of(context).size.width,
+              margin: EdgeInsets.symmetric(horizontal: 5.0, vertical: 8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                image: DecorationImage(
+                  image: AssetImage(i),
+                  fit: BoxFit.fill,
+                ),
+              ),
+              clipBehavior: Clip.antiAliasWithSaveLayer,
             );
-          }).toList(),
+          },
+        );
+      }).toList(),
     );
   }
 }

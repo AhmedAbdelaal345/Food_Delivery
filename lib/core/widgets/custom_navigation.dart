@@ -1,140 +1,118 @@
-import 'dart:developer';
-
-import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:task/pages/cart.dart';
 import 'package:task/pages/home_page.dart';
 import 'package:task/pages/profile.dart';
 
-class MyNavigationBar extends StatefulWidget {
-  const MyNavigationBar({Key? key}) : super(key: key);
+class CustomNavigation extends StatefulWidget {
+  static const String custom = "custom";
+
+  CustomNavigation({super.key});
 
   @override
-  State<MyNavigationBar> createState() => _MyNavigationBarState();
+  State<CustomNavigation> createState() => _CustomNavigationState();
 }
 
-class _MyNavigationBarState extends State<MyNavigationBar> {
-  /// Controller to handle PageView and also handles initial page
-  final _pageController = PageController(initialPage: 0);
+class _CustomNavigationState extends State<CustomNavigation> {
+  final List<Widget> _body = [HomePage(), const Cart(), const Profile()];
 
-  /// Controller to handle bottom nav bar and also handles initial page
-  final NotchBottomBarController _controller = NotchBottomBarController(
-    index: 0,
-  );
-
-  int maxCount = 5;
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-
-    super.dispose();
-  }
-
+  int index = 0;
   @override
   Widget build(BuildContext context) {
-    /// widget list
-    final List<Widget> bottomBarPages = [
-      HomePage(controller: (_controller)),
-      const Cart(),
-      const Profile(),
-    ];
-    return Scaffold(
-      body: PageView(
-        controller: _pageController,
-        physics: const NeverScrollableScrollPhysics(),
-        children: List.generate(
-          bottomBarPages.length,
-          (index) => bottomBarPages[index],
-        ),
-      ),
-      extendBody: true,
-      bottomNavigationBar:
-          (bottomBarPages.length <= maxCount)
-              ? AnimatedNotchBottomBar(
-                /// Provide NotchBottomBarController
-                notchBottomBarController: _controller,
-                color: Colors.white,
-                showLabel: true,
-                textOverflow: TextOverflow.visible,
-                maxLine: 1,
-                shadowElevation: 5,
-                kBottomRadius: 28.0,
-
-                // notchShader: const SweepGradient(
-                //   startAngle: 0,
-                //   endAngle: pi / 2,
-                //   colors: [Colors.white, Colors.grey, Colors.cyanAccent],
-                //   tileMode: TileMode.mirror,
-                // ).createShader(
-                //   Rect.fromCircle(center: Offset.zero, radius: 8.0),
-                // ),
-                notchColor: Color(0xffF6EAEA),
-
-                /// restart app if you change removeMargins
-                removeMargins: false,
-                bottomBarWidth: 500,
-                showShadow: false,
-                durationInMilliSeconds: 300,
-
-                itemLabelStyle: const TextStyle(fontSize: 10),
-
-                elevation: 1,
-                bottomBarItems: const [
-                  BottomBarItem(
-                    inActiveItem: Icon(Icons.home_filled, color: Colors.grey),
-                    activeItem: Icon(Icons.home_filled, color: Colors.red),
-                    itemLabelWidget: Text(
-                      "Home",
+    return SafeArea(
+      child: WillPopScope(
+        onWillPop: () async {
+          print("I pressed on the invoked button $index");
+          if (index == 1 || index == 2) {
+            setState(() {
+              index = 0;
+            });
+            return false;
+          }
+          return true;
+        },
+        child: Scaffold(
+          appBar:
+              index == 0
+                  ? AppBar(
+                    title: Text(
+                      "Food Delivery",
                       style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 9,
+                        color: Colors.black,
                         fontWeight: FontWeight.w500,
+                        fontSize: 20,
                       ),
                     ),
-                  ),
-
-                  BottomBarItem(
-                    inActiveItem: Icon(
-                      Icons.shopping_cart_outlined,
-                      color: Colors.grey,
+                    centerTitle: true,
+                    leading: IconButton(
+                      onPressed: () {},
+                      icon: Icon(Icons.arrow_back),
                     ),
-                    activeItem: Icon(
-                      Icons.shopping_cart_rounded,
-                      color: Colors.red,
-                    ),
-                    itemLabelWidget: Text(
+                    actions: [
+                      IconButton(
+                        onPressed: () {
+                          index = 1;
+                          setState(() {});
+                        },
+                        icon: Icon(Icons.shopping_cart_outlined),
+                      ),
+                    ],
+                  )
+                  : index == 1
+                  ? AppBar(
+                    title: Text(
                       "Cart",
                       style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 9,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 18,
                       ),
                     ),
-                  ),
-                  BottomBarItem(
-                    inActiveItem: Icon(
-                      Icons.person_outline_outlined,
-                      color: Colors.grey,
+                    centerTitle: true,
+                    leading: IconButton(
+                      onPressed: () {},
+                      icon: Icon(Icons.arrow_back),
                     ),
-                    activeItem: Icon(Icons.person, color: Colors.red),
-                    itemLabelWidget: Text(
+                  )
+                  : AppBar(
+                    title: Text(
                       "Profile",
                       style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 9,
-                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 18,
                       ),
                     ),
+                    centerTitle: true,
+                    leading: IconButton(
+                      onPressed: () {},
+                      icon: Icon(Icons.arrow_back),
+                    ),
                   ),
-                ],
-                onTap: (index) {
-                  log('current selected index $index');
-                  _pageController.jumpToPage(index);
-                },
-                kIconSize: 24.0,
-              )
-              : null,
+          body: _body[index],
+          bottomNavigationBar: BottomNavigationBar(
+            currentIndex: index,
+            selectedItemColor: Colors.red,
+            unselectedItemColor: Colors.grey,
+            unselectedLabelStyle: TextStyle(color: Colors.grey),
+            type: BottomNavigationBarType.shifting,
+            onTap: (value) {
+              index = value;
+              print("The page index is : $index");
+              setState(() {});
+            },
+            items: [
+              BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.shopping_cart),
+                label: "Cart",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                label: "Profile",
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

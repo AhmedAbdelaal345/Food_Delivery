@@ -4,22 +4,11 @@ import 'package:task/core/widgets/custom_button2.dart';
 
 class Profile extends StatelessWidget {
   const Profile({super.key});
+  static const String profileId = "Profile";
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Profile",
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w700,
-            fontSize: 18,
-          ),
-        ),
-        centerTitle: true,
-        leading: IconButton(onPressed: () {}, icon: Icon(Icons.arrow_back)),
-      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
