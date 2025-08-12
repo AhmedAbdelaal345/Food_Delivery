@@ -5,28 +5,23 @@ import 'package:task/models/food_item_model.dart';
 class CartManger extends ChangeNotifier {
   List<CartModel> cartItems = [];
 
-  // Fixed: Return actual cart item count
   int get cartItemCount => cartItems.length;
 
-  // Fixed: Calculate actual total price
   double get totalPrice {
     return cartItems.fold(0.0, (total, item) => total + (item.price * item.quantity));
   }
 
-  // Get total quantity of all items (sum of all quantities)
   int get totalQuantity {
     return cartItems.fold(0, (total, item) => total + item.quantity);
   }
 
   void addToCart(CartModel item) {
-    // Check if item already exists in cart
     int existingIndex = cartItems.indexWhere((cartItem) => cartItem.id == item.id);
     
     if (existingIndex != -1) {
-      // If item exists, increase quantity
       cartItems[existingIndex].quantity += item.quantity;
     } else {
-      // If item doesn't exist, add new item
+
       cartItems.add(item);
     }
     notifyListeners();
@@ -57,7 +52,6 @@ class CartManger extends ChangeNotifier {
     }
   }
 
-  // Added: Decrease quantity method
   void decreaseQuantity(int id) {
     for (var item in cartItems) {
       if (item.id == id) {

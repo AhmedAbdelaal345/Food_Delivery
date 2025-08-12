@@ -63,10 +63,11 @@ class _CartState extends State<Cart> {
                     itemCount: cartManager.cartItems.length,
                     itemBuilder: (context, index) {
                       final cartItem = cartManager.cartItems[index];
-                      
+
                       return listTile(
                         image: cartItem.image,
-                        subText: "Size: Large - \$${cartItem.price.toStringAsFixed(2)} each",
+                        subText:
+                            "Size: Large - \$${cartItem.price.toStringAsFixed(2)} each",
                         text: cartItem.title,
                         widget: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -77,7 +78,7 @@ class _CartState extends State<Cart> {
                                 if (cartItem.quantity > 1) {
                                   cartManager.increaseQuantity(cartItem.id);
                                 } else {
-                                  // Remove item if quantity would be 0
+                                  //Here i remove item when quantity is less than 1
                                   cartManager.removeFromCartById(cartItem.id);
                                 }
                               },
@@ -104,11 +105,9 @@ class _CartState extends State<Cart> {
                     },
                   ),
                 ),
-                
-                // Spacer
+
                 SizedBox(height: 20),
-                
-                // Price Summary
+
                 Expanded(
                   flex: 2,
                   child: Column(
@@ -117,12 +116,18 @@ class _CartState extends State<Cart> {
                         children: [
                           Text(
                             "SubTotal ($totalItems items)",
-                            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400),
+                            style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
                           Spacer(),
                           Text(
                             "\$${subtotal.toStringAsFixed(2)}",
-                            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400),
+                            style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
                         ],
                       ),
@@ -131,12 +136,18 @@ class _CartState extends State<Cart> {
                         children: [
                           Text(
                             "Delivery Fee",
-                            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400),
+                            style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
                           Spacer(),
                           Text(
                             "\$${deliveryFee.toStringAsFixed(2)}",
-                            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400),
+                            style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
                         ],
                       ),
@@ -145,12 +156,18 @@ class _CartState extends State<Cart> {
                         children: [
                           Text(
                             "Taxes",
-                            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400),
+                            style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
                           Spacer(),
                           Text(
                             "\$${taxes.toStringAsFixed(2)}",
-                            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400),
+                            style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
                         ],
                       ),
@@ -161,11 +178,17 @@ class _CartState extends State<Cart> {
                         children: [
                           Text(
                             "Total",
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                           Text(
                             "\$${total.toStringAsFixed(2)}",
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ],
                       ),
@@ -174,7 +197,6 @@ class _CartState extends State<Cart> {
                         text: "Checkout (\$${total.toStringAsFixed(2)})",
                         colorText: Colors.white,
                         ontap: () {
-                          // Implement checkout logic
                           _showCheckoutDialog(context, cartManager);
                         },
                         colorButton: 0xffE72837,
@@ -207,7 +229,6 @@ class _CartState extends State<Cart> {
             TextButton(
               child: Text('Confirm'),
               onPressed: () {
-                // Clear cart after successful checkout
                 cartManager.clearCart();
                 Navigator.of(context).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
