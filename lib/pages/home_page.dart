@@ -2,6 +2,7 @@ import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_not
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:task/core/constants.dart';
+import 'package:task/core/widgets/product_grid_widget.dart';
 import 'package:task/core/widgets/product_list_widget.dart';
 import 'package:task/models/food_item_model.dart';
 // Import your ProductListWidget
@@ -19,78 +20,104 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool isList = true;
   List<bool> isheart = [false, false, false];
-  bool isAddedToCart = false;
+  List<bool> isAddedToCart = [false, false, false];
 
   @override
   Widget build(BuildContext context) {
     List<FoodItemModel> list = [
       FoodItemModel(
+        id: 1,
         image: Constants.image4,
         title: "Burger Combo",
         subtitle: "Delicious Burger with Fries",
-        isAddToCart: isAddedToCart,
+        isAddToCart: isAddedToCart[0],
         price: 12.25,
-        
       ),
       FoodItemModel(
+        id: 2,
         title: "Pizaa",
         subtitle: "Freshly backed Pizaa",
         image: Constants.image7,
-        isAddToCart: isAddedToCart,
+        isAddToCart: isAddedToCart[1],
         price: 25.00,
       ),
       FoodItemModel(
+        id: 3,
         title: "Chicken wings",
         subtitle: "Spicy Chicken Wings",
         image: Constants.image6,
-        isAddToCart: isAddedToCart,
+        isAddToCart: isAddedToCart[2],
         price: 17.55,
       ),
     ];
 
-    List<Widget> grid = [
-      _gridTile(
-        text: "Burger Combo",
-        subtext: "Delicious Burger with Fries",
+    List<FoodItemModel> grid = [
+      FoodItemModel(
+        id: 1,
         image: Constants.image4,
-        price: "12.25",
-        icon: !isheart[0]
-            ? Icon(Icons.favorite_border_outlined, color: Colors.white)
-            : Icon(Icons.favorite, color: Colors.red),
-        ontap: () {
-          setState(() {
-            isheart[0] = !isheart[0];
-          });
-        },
+        title: "Burger Combo",
+        subtitle: "Delicious Burger with Fries",
+        isAddToCart: isAddedToCart[0],
+        price: 12.25,
       ),
-      _gridTile(
-        text: "Pizaa",
-        subtext: "Freshly backed Pizaa",
+      FoodItemModel(
+        id: 2,
+        title: "Pizaa",
+        subtitle: "Freshly backed Pizaa",
         image: Constants.image7,
-        price: "15.27",
-        icon: !isheart[1]
-            ? Icon(Icons.favorite_border_outlined, color: Colors.white)
-            : Icon(Icons.favorite, color: Colors.red),
-        ontap: () {
-          setState(() {
-            isheart[1] = !isheart[1];
-          });
-        },
-      ),
-      _gridTile(
-        text: "Chicken Wings",
-        subtext: "Spicy chicken Wings",
+        isAddToCart: isAddedToCart[1],
+        price: 25.00,
+      ),FoodItemModel(id: 3,
+        title: "Chicken wings",
+        subtitle: "Spicy Chicken Wings",
         image: Constants.image6,
-        price: "10.85",
-        icon: !isheart[2]
-            ? Icon(Icons.favorite_border_outlined, color: Colors.white)
-            : Icon(Icons.favorite, color: Colors.red),
-        ontap: () {
-          setState(() {
-            isheart[2] = !isheart[2];
-          });
-        },
-      ),
+        isAddToCart: isAddedToCart[2],
+        price: 17.55,)
+      // _gridTile(
+      //   text: "Burger Combo",
+      //   subtext: "Delicious Burger with Fries",
+      //   image: Constants.image4,
+      //   price: "12.25",
+      //   icon:
+      //       !isheart[0]
+      //           ? Icon(Icons.favorite_border_outlined, color: Colors.white)
+      //           : Icon(Icons.favorite, color: Colors.red),
+      //   ontap: () {
+      //     setState(() {
+      //       isheart[0] = !isheart[0];
+      //     });
+      //   },
+      // ),
+      // _gridTile(
+      //   text: "Pizaa",
+      //   subtext: "Freshly backed Pizaa",
+      //   image: Constants.image7,
+      //   price: "15.27",
+      //   icon:
+      //       !isheart[1]
+      //           ? Icon(Icons.favorite_border_outlined, color: Colors.white)
+      //           : Icon(Icons.favorite, color: Colors.red),
+      //   ontap: () {
+      //     setState(() {
+      //       isheart[1] = !isheart[1];
+      //     });
+      //   },
+      // ),
+      // _gridTile(
+      //   text: "Chicken Wings",
+      //   subtext: "Spicy chicken Wings",
+      //   image: Constants.image6,
+      //   price: "10.85",
+      //   icon:
+      //       !isheart[2]
+      //           ? Icon(Icons.favorite_border_outlined, color: Colors.white)
+      //           : Icon(Icons.favorite, color: Colors.red),
+      //   ontap: () {
+      //     setState(() {
+      //       isheart[2] = !isheart[2];
+      //     });
+      //   },
+      // ),
     ];
 
     return Padding(
@@ -170,22 +197,9 @@ class _HomePageState extends State<HomePage> {
           SizedBox(height: 15),
           isList
               ? Flexible(
-                  child: ProductListWidget(items: list), // Using separate widget
-                )
-              : Flexible(
-                  child: GridView.builder(
-                    itemCount: grid.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 8,
-                      mainAxisSpacing: 8,
-                    ),
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return grid[index];
-                    },
-                  ),
-                ),
+                child: ProductListWidget(items: list), // Using separate widget
+              )
+              : Flexible(child: ProductGridWidget(items: grid)),
         ],
       ),
     );
@@ -232,93 +246,35 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _gridTile({
-    String? price,
-    required String text,
-    required String subtext,
-    required String image,
-    required Icon icon,
-    required ontap,
-  }) {
-    return GridTile(
-      header: GridTileBar(
-        backgroundColor: Colors.black45,
-        title: Text(
-          "${price ?? 0.00} \$",
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
-        ),
-        trailing: IconButton(icon: icon, onPressed: ontap),
-      ),
-      footer: GridTileBar(
-        backgroundColor: Colors.black45,
-        title: Text(
-          "$text",
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 14,
-          ),
-        ),
-        subtitle: Text(
-          "$subtext",
-          style: TextStyle(color: Colors.white70, fontSize: 12),
-        ),
-        trailing: IconButton(
-          icon: Icon(Icons.add_shopping_cart, color: Colors.white),
-          onPressed: () {},
-        ),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(10),
-          onTap: () {
-            // Handle item tap
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              image: DecorationImage(
-                image: AssetImage("$image"),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+  
 
   Widget _carousalSlider() {
     return CarouselSlider(
       options: CarouselOptions(height: 200.0),
-      items: [
-        Constants.image2,
-        Constants.image3,
-        Constants.image4,
-        Constants.image5,
-      ].map((i) {
-        return Builder(
-          builder: (BuildContext context) {
-            return Container(
-              width: MediaQuery.of(context).size.width,
-              margin: EdgeInsets.symmetric(horizontal: 5.0, vertical: 8),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                image: DecorationImage(
-                  image: AssetImage(i),
-                  fit: BoxFit.fill,
-                ),
-              ),
-              clipBehavior: Clip.antiAliasWithSaveLayer,
+      items:
+          [
+            Constants.image2,
+            Constants.image3,
+            Constants.image4,
+            Constants.image5,
+          ].map((i) {
+            return Builder(
+              builder: (BuildContext context) {
+                return Container(
+                  width: MediaQuery.of(context).size.width,
+                  margin: EdgeInsets.symmetric(horizontal: 5.0, vertical: 8),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    image: DecorationImage(
+                      image: AssetImage(i),
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                );
+              },
             );
-          },
-        );
-      }).toList(),
+          }).toList(),
     );
   }
 }

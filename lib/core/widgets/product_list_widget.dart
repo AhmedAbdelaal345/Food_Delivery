@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:task/core/constants.dart';
 import 'package:task/manager/cart_manger.dart';
 import 'package:task/models/cart_model.dart';
 import 'package:task/models/food_item_model.dart';
@@ -20,56 +21,69 @@ class _ProductListWidgetState extends State<ProductListWidget> {
   }
 
   Widget _listTile({required FoodItemModel item}) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 8),
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundImage: AssetImage(item.image),
-          radius: 25,
-        ),
-        title: Text(
-          item.title,
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w700,
-            fontSize: 18,
+    return Consumer<CartManger>(
+      builder: (context, CartManger, child) {
+        bool isInCart = CartManger.isItemInCart(item.id);
+        print('Item ${item.id} (${item.title}) - isInCart: $isInCart');
+
+        return Container(
+          margin: EdgeInsets.only(bottom: 8),
+          child: ListTile(
+            leading: CircleAvatar(
+              backgroundImage: AssetImage(item.image),
+              radius: 25,
+            ),
+            title: Text(
+              item.title,
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.w700,
+                fontSize: 18,
+              ),
+            ),
+            subtitle: Text(
+              item.subtitle,
+              style: TextStyle(
+                color: Colors.grey,
+                fontWeight: FontWeight.w500,
+                fontSize: 12,
+              ),
+            ),
+            trailing: SizedBox(
+              width: MediaQuery.of(context).size.width / 2.8,
+              child: _button(
+                isInCart ? "Remove from cart" : "Add to cart",
+                isInCart ? 0xffE72835 : 0xffF6EAEA,
+                isInCart ? Colors.white : Colors.black,
+                FontWeight.w600,
+                10,
+                () {
+                  if (isInCart) {
+                    CartManger.removeFromCartById(item.id);
+                  } else {
+                    CartManger.addToCart(
+                      CartModel(
+                        id: item.id,
+                        title: item.title,
+                        subtitle: item.subtitle,
+                        image: item.image,
+                        price: item.price,
+                        quantity: 1,
+                      ),
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("${item.title} added to cart!"),
+                          backgroundColor: Colors.redAccent.withOpacity(0.8),
+                        ),
+                      ),
+                    );
+                  }
+                },
+              ),
+            ),
           ),
-        ),
-        subtitle: Text(
-          item.subtitle,
-          style: TextStyle(
-            color: Colors.grey,
-            fontWeight: FontWeight.w500,
-            fontSize: 12,
-          ),
-        ),
-        trailing: SizedBox(
-          width: MediaQuery.of(context).size.width / 2.8,
-          child: _button(
-            item.isAddToCart ? "Remove from cart" : "Add to cart",
-            item.isAddToCart ? 0xffE72835 : 0xffF6EAEA,
-            item.isAddToCart ? Colors.white : Colors.black,
-            FontWeight.w600,
-            10,
-            () {
-              setState(() {
-                item.isAddToCart = !item.isAddToCart;
-              });
-              Provider.of<CartManger>(context, listen: false).addToCart(
-                CartModel(
-                  id: item.id,
-                  title: item.title,
-                  image: item.image,
-                  subtitle: item.subtitle,
-                  price: item.price,
-                  quantity: item.quantity,
-                  isAddToCart: item.isAddToCart,
-                ),
-              );
-            },
-          ),
-        ),
-      ),
+        );
+      },
     );
   }
 

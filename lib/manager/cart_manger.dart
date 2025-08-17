@@ -15,14 +15,21 @@ class CartManger extends ChangeNotifier {
     return cartItems.fold(0, (total, item) => total + item.quantity);
   }
 
-  void addToCart(CartModel item) {
+  void addToCart(CartModel item, ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackBar) {
     int existingIndex = cartItems.indexWhere((cartItem) => cartItem.id == item.id);
-    
+         
     if (existingIndex != -1) {
       cartItems[existingIndex].quantity += item.quantity;
     } else {
-
-      cartItems.add(item);
+      cartItems.add(CartModel(
+        id: item.id,
+        title: item.title,
+        subtitle: item.subtitle,
+        image: item.image,
+        price: item.price,
+        quantity: item.quantity,
+        isAddToCart: true,
+      ));
     }
     notifyListeners();
   }
@@ -67,12 +74,14 @@ class CartManger extends ChangeNotifier {
     }
   }
 
-  // Added: Check if item is in cart (needed for ProductListWidget)
+  // Check if item is in cart
   bool isItemInCart(int id) {
-    return cartItems.any((item) => item.id == id);
+    bool inCart = cartItems.any((item) => item.id == id);
+    print('Checking if item $id is in cart: $inCart'); // Debug print
+    return inCart;
   }
 
-  // Added: Get cart item by ID
+  // Get cart item by ID
   CartModel? getCartItem(int id) {
     try {
       return cartItems.firstWhere((item) => item.id == id);
@@ -81,13 +90,13 @@ class CartManger extends ChangeNotifier {
     }
   }
 
-  // Added: Update item quantity directly
+  // Update item quantity directly
   void updateQuantity(int id, int newQuantity) {
     if (newQuantity <= 0) {
       removeFromCartById(id);
       return;
     }
-    
+         
     for (var item in cartItems) {
       if (item.id == id) {
         item.quantity = newQuantity;

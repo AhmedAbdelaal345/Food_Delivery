@@ -2,14 +2,15 @@ import 'package:task/core/constants.dart';
 import 'package:task/core/widgets/product_list_widget.dart';
 
 class FoodItemModel {
-  final int id = DateTime.now().minute + DateTime.now().second;
+  final int id;
   final String image;
- int quantity ;
+  int quantity;
   final String title;
   final String subtitle;
   final double price;
   bool isAddToCart;
   FoodItemModel({
+    required this.id,
     required this.image,
     required this.title,
     required this.subtitle,
